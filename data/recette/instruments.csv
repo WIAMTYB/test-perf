@@ -1,0 +1,5 @@
+isin,symbol,tickSize,enabled
+MA0000011884,BCP,0.01,true
+MA0000011454,CIH,0.01,true
+MA0000012445,IAM,0.01,true
+MA0000011512,BOA,0.01,false

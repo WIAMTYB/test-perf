@@ -1,0 +1,25 @@
+# Secrets and local state
+.env
+.env.*
+!.env.example
+tokens-*.sql
+
+# Campaign output (evidence is archived outside git)
+campaigns/
+
+# Build
+target/
+*.log
+
+# Python
+harness/.venv/
+harness/**/__pycache__/
+*.pyc
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/

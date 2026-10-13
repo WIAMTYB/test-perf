@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.attijariwafa.titres</groupId>
+  <artifactId>titres-trading-performance-tests</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>Titres trading performance tests</name>
+  <description>Gatling campaigns against the selfcare trading API (client order flows and portfolio reads).</description>
+
+  <properties>
+    <!-- Gatling 3.13 is validated on JDK 17/21; the workstation runs it on GraalVM 25. -->
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <gatling.version>3.13.5</gatling.version>
+    <gatling-maven-plugin.version>4.11.1</gatling-maven-plugin.version>
+    <junit.version>5.11.4</junit.version>
+    <assertj.version>3.27.3</assertj.version>
+
+    <!-- Campaign parameters, every one forwarded to the simulation JVM as -Dperf.* -->
+    <perf.env>recette</perf.env>
+    <perf.campaignId></perf.campaignId>
+    <perf.seed>20261009</perf.seed>
+    <perf.duration>PT10M</perf.duration>
+    <perf.targetRate></perf.targetRate>
+    <perf.users></perf.users>
+    <perf.maxOrders></perf.maxOrders>
+    <perf.profile>nominal</perf.profile>
+    <perf.side>BUY</perf.side>
+    <perf.cancel>false</perf.cancel>
+    <perf.paceSeconds></perf.paceSeconds>
+    <perf.levels></perf.levels>
+    <perf.runDir></perf.runDir>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.gatling.highcharts</groupId>
+      <artifactId>gatling-charts-highcharts</artifactId>
+      <version>${gatling.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+      </plugin>
+      <plugin>
+        <!-- Unit tests of the helpers only; the simulations run through gatling:test. -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.2</version>
+        <configuration>
+          <excludes>
+            <exclude>**/simulations/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.gatling</groupId>
+        <artifactId>gatling-maven-plugin</artifactId>
+        <version>${gatling-maven-plugin.version}</version>
+        <configuration>
+          <runDescription>${perf.campaignId}</runDescription>
+          <resultsFolder>${project.build.directory}/gatling</resultsFolder>
+          <jvmArgs>
+            <jvmArg>-Xmx2g</jvmArg>
+            <jvmArg>-Dfile.encoding=UTF-8</jvmArg>
+          </jvmArgs>
+          <systemProperties>
+            <perf.env>${perf.env}</perf.env>
+            <perf.campaignId>${perf.campaignId}</perf.campaignId>
+            <perf.seed>${perf.seed}</perf.seed>
+            <perf.duration>${perf.duration}</perf.duration>
+            <perf.targetRate>${perf.targetRate}</perf.targetRate>
+            <perf.users>${perf.users}</perf.users>
+            <perf.maxOrders>${perf.maxOrders}</perf.maxOrders>
+            <perf.profile>${perf.profile}</perf.profile>
+            <perf.side>${perf.side}</perf.side>
+            <perf.cancel>${perf.cancel}</perf.cancel>
+            <perf.paceSeconds>${perf.paceSeconds}</perf.paceSeconds>
+            <perf.levels>${perf.levels}</perf.levels>
+            <perf.runDir>${perf.runDir}</perf.runDir>
+            <perf.projectDir>${project.basedir}</perf.projectDir>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
